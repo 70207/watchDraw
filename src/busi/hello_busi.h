@@ -1,5 +1,5 @@
 //
-//  hello_busi.hpp
+//  hello_busi.h
 //  watchMyDraw
 //
 //  Created by peter chen on 2017/10/8.
@@ -11,11 +11,7 @@
 
 #include <stdio.h>
 
-#include "../util/hello_log.h"
-#include "../util/hello_status.h"
 
-#include "../net/hello_net.h"
-#include "../package/hello_package.h"
 
 
 namespace hello{
@@ -23,48 +19,91 @@ namespace hello{
     class BusiInterface{
     public:
         
+        /**
+         * recv link request
+         * @param {int} [srcIp] the src ip
+         * @return {int}  status
+         */
+        virtual int onLink(int srcIp);
         
-        virtual int recvLink(int srcIp)
-        {
-            info("not implemented, recv link from src ip :%d", srcIp);
-            return HELLO_STATUS_NOT_IMPLEMENTED;
-        }
-        virtual int recvConfirm(int srcIp)
-        {
-            info("not implemented, recv confirm from src ip :%d", srcIp);
-            return HELLO_STATUS_NOT_IMPLEMENTED;
-        }
-        virtual int recvMessage(int srcIp, const char* msg, int size)
-        {
-            info("not implemented, recv message from src ip :%d", srcIp);
-            return HELLO_STATUS_NOT_IMPLEMENTED;
-        }
+        /**
+         * recv confirm request
+         * @param {int} [srcIp] the src ip
+         * @return {int}  status
+         */
+        virtual int onConfirm(int srcIp);
+        
+        
+        
+        /**
+         * recv cancel request
+         * @param {int} [srcIp] the src ip
+         * @return {int}  status
+         */
+        virtual int onCancel(int srcIp);
+        
+        /**
+         * recv message
+         * @param {int} [srcIp] the src ip
+         * @param {const char*} [msg] rcvd msg
+         * @param {int}  [size] rcvd msg size
+         * @return {int}  status
+         */
+        virtual int onMsg(int srcIp, const char* msg, int size);
+        
+        
+       
+        
     };
     
     class Busi{
     public:
-        Busi():m_itf(0){
-            
-        }
+        Busi();
+        virtual ~Busi();
         
-        ~Busi(){
-            
-        }
+        /**
+         * init busi
+         * @param {BusiInterface} [itf] callback object
+         * @return {int}  status
+         */
+        virtual int Init(BusiInterface* itf);
         
-        int Init(BusiInterface* itf);
+        /**
+         * link to destination
+         * @param {int} [dstIp] destination address
+         * @return {int}  status
+         */
+        virtual int Link(int dstIp);
         
-        int Link(int dstIp);
-        int Confirm(int dstIp);
-        int Cancel(int dstIp);
+        /**
+         * confirm link to destination
+         * @param {int} [dstIp] destination address
+         * @return {int}  status
+         */
+        virtual int Confirm(int dstIp);
         
-        int SendMsg(int dstIp, const char* msg, int size);
+        /**
+         * cancel link to destination
+         * @param {int} [dstIp] destination address
+         * @return {int}  status
+         */
+        virtual int Cancel(int dstIp);
+        
+        /**
+         * send msg to destination
+         * @param {int} [dstIp] destination address
+         * @param {const char*} [msg] rcvd msg
+         * @param {int}  [size] rcvd msg size
+         * @return {int}  status
+         */
+        virtual int SendMsg(int dstIp, const char* msg, int size);
         
     private:
-        BusiInterface*			m_itf;
-        Net 					m_net;
-        Package 				m_package;
+        
+        Busi*					m_busi;
+        
     };
     
 }
 
-#endif /* hello_busi_hpp */
+#endif /* hello_busi_h */

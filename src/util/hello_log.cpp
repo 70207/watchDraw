@@ -104,7 +104,7 @@ namespace hello{
         int count = ::write(fd, buffer, p - buffer);
         if (count != p-buffer) {
             fprintf(stderr, "write log file %s failed. written %d errmsg: %s\n",
-                    m_logPath.c_str(), err, strerror(errno));
+                    m_logPath.c_str(), count, strerror(errno));
         }
         if (l <= LOG__FATAL) {
             syslog(LOG_ERR, "%s", buffer+27);

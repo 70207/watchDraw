@@ -10,11 +10,17 @@
 #define hello_thread_hpp
 
 #include <stdio.h>
+#include <functional>
+
+
 
 namespace hello{
-    class Thread{
-    public:
-        static long long GetThreadID();
+    namespace Thread{
+
+        
+        
+        long long GetThreadID();
+        int CreateThread( std::function<void()> func );
         
     
     };

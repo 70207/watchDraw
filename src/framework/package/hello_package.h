@@ -33,7 +33,7 @@ namespace hello{
 
         int Confirm(char* buf, int& bufSize);
         int Cancel(char* buf, int& bufSize);
-        int SendMsg(char* msg, int size, char* buf, int& bufSize);
+        int SendMsg(const char* msg, int size, char* buf, int& bufSize);
         
     private:
         

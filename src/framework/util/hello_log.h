@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <functional>
 
 
 #define hellolog(level, ...) \
@@ -24,6 +25,10 @@ Log::getInstance().RealLog(level, __FILE__, __LINE__, __func__, __VA_ARGS__);
 #define error(...) hellolog(LOG__ERROR, __VA_ARGS__)
 #define fatal(...) hellolog(LOG__FATAL, __VA_ARGS__)
 
+#define setlogpath(n) Log::getInstance().SetPath(n)
+#define setloglevel(l) Log::getInstance().SetLogLevel(l)
+#define setlogproc(p) Log::getInstance().SetLogProc(p)
+
 namespace hello{
     
     enum LogLevel{LOG__FATAL=0, LOG__ERROR, LOG__WARN, LOG__INFO, LOG__DEBUG};
@@ -34,6 +39,9 @@ namespace hello{
         ~Log();
         
         void SetPath(const std::string& path);
+        void SetLogProc(std::function<void(const char* buffer, int size)> logFunc){
+            m_logFunc = logFunc; m_logFuncSet = true;}
+        void SetLogLevel(const char* l);
         void SetLogLevel(LogLevel l){ m_level = l > LOG__DEBUG ? LOG__DEBUG : l;}
         void RealLog(int l, const char* file, int line, const char* func, const char* fmt ...);
         
@@ -47,6 +55,9 @@ namespace hello{
         int 			m_logFd;
         long long 		m_threadID;
         std::string     m_logPath;
+        
+        std::function<void(const char* buffer, int size)>   m_logFunc;
+        bool 			m_logFuncSet;
     };
 }
 

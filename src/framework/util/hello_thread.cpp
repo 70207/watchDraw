@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <thread>
 #include <vector>
+#include <string.h>
 
 #include "hello_thread.h"
 #include "hello_status.h"

@@ -29,7 +29,7 @@ namespace hello{
     
     void Package::Parse(int srcIp, const char* msg, int size)
     {
-        if(size <= sizeof(proto::Msg)){
+        if(size < sizeof(proto::Msg)){
             return;
         }
         
@@ -111,7 +111,7 @@ namespace hello{
         return HELLO_STATUS_OK;
     }
     
-    int Package::SendMsg(char* msg, int size, char* buf, int& bufSize)
+    int Package::SendMsg(const char* msg, int size, char* buf, int& bufSize)
     {
         
         int __size = sizeof(proto::Msg) + size;

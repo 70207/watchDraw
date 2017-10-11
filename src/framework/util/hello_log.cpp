@@ -22,7 +22,7 @@
 #include "hello_thread.h"
 
 namespace hello{
-    Log::Log() : m_level(LOG__DEBUG), m_logFd(0), m_threadID(0){
+    Log::Log() : m_level(LOG__DEBUG), m_logFd(0), m_threadID(0),m_logFuncSet(false){
         
     }
     Log::~Log(){
@@ -53,6 +53,18 @@ namespace hello{
         "INFO",
         "DEBUG",
     };
+    
+    void Log::SetLogLevel(const char* l)
+    {
+        LogLevel ilevel = LOG__INFO;
+        for (size_t i = 0; i < sizeof(g_levelStr)/sizeof(const char*); i++) {
+            if (strcasecmp(g_levelStr[i], l) == 0) {
+                ilevel = (LogLevel)i;
+                break;
+            }
+        }
+        SetLogLevel(ilevel);
+    }
     
     
     void Log::RealLog(int l, const char* file, int line, const char* func, const char* fmt ...)
@@ -101,10 +113,15 @@ namespace hello{
         *++p = '\n';
         *++p = '\0';
         int fd = m_logFd == -1 ? 1 : m_logFd;
-        int count = ::write(fd, buffer, p - buffer);
-        if (count != p-buffer) {
-            fprintf(stderr, "write log file %s failed. written %d errmsg: %s\n",
-                    m_logPath.c_str(), count, strerror(errno));
+        if(m_logFuncSet){
+            m_logFunc(buffer, p - buffer);
+        }
+        else{
+            int count = ::write(fd, buffer, p - buffer);
+            if (count != p-buffer) {
+                fprintf(stderr, "write log file %s failed. written %d errmsg: %s\n",
+                        m_logPath.c_str(), count, strerror(errno));
+            }
         }
         if (l <= LOG__FATAL) {
             syslog(LOG_ERR, "%s", buffer+27);

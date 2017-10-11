@@ -48,7 +48,11 @@ namespace hello{
         addr.sin_port = htons(HELLO_COMM_SERVER_LISTEN_PORT);
         
         
-        sendto(m_serverFd, msg, size, 0, (struct sockaddr*)&addr, sizeof(addr));
+        
+        
+        int status = sendto(m_serverFd, msg, size, 0, (struct sockaddr*)&addr, sizeof(addr));
+        
+        info("send msg to addr:%s, status:%d\n", inet_ntoa(addr.sin_addr),  status);
         
         return HELLO_STATUS_OK;
     }
@@ -103,6 +107,8 @@ namespace hello{
             warn("recv msg but interface not implemented");
             return;
         }
+        
+        info("net recv msg size:%d", size);
         
         m_itf->onNetMsg(addr.sin_addr.s_addr, buffer, size);
         

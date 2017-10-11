@@ -73,7 +73,7 @@ namespace  hello {
         char* _buf = 0;
         char* buf = buffer;
         
-        int status = m_package.Link(buf, bufSize);
+        int status = m_package.SendMsg(msg, size, buffer, bufSize);
         if(status == HELLO_STATUS_PROTO_BUFFER_NOT_ENOUGH){
             if(bufSize > 4096){
                 warn("send msg must not bigger than 4096");
@@ -92,7 +92,7 @@ namespace  hello {
             
             buf = _buf;
             
-            status = m_package.Link(buf, bufSize);
+            status = m_package.SendMsg(msg, size, buffer, bufSize);
         }
         
         if(status != HELLO_STATUS_OK){
